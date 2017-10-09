@@ -1,0 +1,6 @@
+php:
+  container_name: client_php
+  build: ./
+  volumes:
+    - .:/usr/local/app
+  tty: true
