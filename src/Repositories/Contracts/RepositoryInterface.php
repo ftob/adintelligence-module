@@ -5,9 +5,13 @@ namespace AdIntelligence\Client\Repositories\Contracts;
 /**
  * Interface RepositoryInterface
  */
-interface RepositoryInterface {
+interface RepositoryInterface
+{
 
-    public const ERROR = -1, PENDING = 0, DOWNLOADING = 1, DONE = 2;
+    const ERROR = -1;
+    const PENDING = 0;
+    const DOWNLOADING = 1;
+    const DONE = 2;
 
     public function changeStatus(int $status, $message = ''): bool;
 
