@@ -1,9 +1,9 @@
 <?php
 
-namespace AdIntelligence\Services\Contracts;
+namespace AdIntelligence\Client\Services\Contracts;
 
 
-use AdIntelligence\Repositories\Contracts\RepositoryInterface;
+use AdIntelligence\Client\Repositories\Contracts\RepositoryInterface;
 use Psr\Http\Message\UriInterface;
 
 interface RequesterInterface {

@@ -1,6 +1,6 @@
 <?php
 
-namespace AdIntelligence\Repositories\Contracts;
+namespace AdIntelligence\Client\Repositories\Contracts;
 
 /**
  * Interface RepositoryInterface

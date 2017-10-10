@@ -20,5 +20,10 @@ class ServiceProvider extends LaravelServiceProvider
         $this->publishes([
             __DIR__.'/Resources/config/parameter.php' => config_path('adintelelligence.php'),
         ]);
+
+        $this->publishes([
+            __DIR__ . '/migrations' => database_path('/migrations')
+        ], 'migrations');
+
     }
 }

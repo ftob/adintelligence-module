@@ -1,9 +1,9 @@
 <?php
 namespace AdIntelligence\Client\Tests\Services;
 
-
-use AdIntelligence\Repositories\Contracts\RepositoryInterface;
-use AdIntelligence\Services\Contracts\RequesterInterface;
+use AdIntelligence\Client\Services\ClientService;
+use AdIntelligence\Client\Repositories\Contracts\RepositoryInterface;
+use AdIntelligence\Client\Services\Contracts\RequesterInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
@@ -12,9 +12,12 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
-use Illuminate\Console\Command;
 use Illuminate\Foundation\Testing\TestCase;
 
+/**
+ * Class ClientServiceTest
+ * @package AdIntelligence\Client\Tests\Services
+ */
 class ClientServiceTest extends TestCase {
 
     use \CreatesApplication;
@@ -26,7 +29,7 @@ class ClientServiceTest extends TestCase {
     protected $storage;
 
     /** @var RepositoryInterface */
-    protected $entityStatus;
+    protected $repository;
 
     public function setUp()
     {
@@ -41,18 +44,18 @@ class ClientServiceTest extends TestCase {
         $this->client = new Client(['handler' => $handler]);
     }
 
+
     public function testRun() {
         /** @var RequesterInterface $service */
-        $service = new \AdIntelligence\Client\Services\ClientService(
-            $client,
-            $storage,
-            $entityStatus
+        $service = new ClientService(
+            $this->client,
+            $this->storage,
+            $this->repository
         );
         $uri = new Uri("http://google.com");
         $service = $service->get($uri);
 
         $this->assertInternalType(RequesterInterface::class, $service);
         $this->assertEquals(RepositoryInterface::DONE, $service->status());
-
     }
 }
