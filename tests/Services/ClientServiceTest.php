@@ -47,6 +47,7 @@ class ClientServiceTest extends TestCase {
         $this->client = new Client(['handler' => $handler]);
 
         $this->storage = \Mockery::mock('Illuminate\Contracts\Filesystem\Filesystem');
+        $this->storage->shouldReceive('put')->withAnyArgs()->andReturn(true);
         $taskMock = \Mockery::mock(TaskInterface::class);
         $taskMock->shouldReceive('save')->andReturn(true);
         $this->repository = new EloquentRepository($taskMock);
@@ -64,6 +65,6 @@ class ClientServiceTest extends TestCase {
         $repository = $service->get($uri);
 
         $this->assertInstanceOf(RepositoryInterface::class, $repository);
-        $this->assertEquals(RepositoryInterface::PENDING, $service->status());
+        $this->assertEquals(RepositoryInterface::DONE, $service->status());
     }
 }
