@@ -1,5 +1,5 @@
 <?php
-namespace AdIntelligence\Repositories;
+namespace AdIntelligence\Client\Repositories;
 
 use AdIntelligence\Client\Models\Contracts\TaskInterface;
 use AdIntelligence\Client\Repositories\Contracts\RepositoryInterface;

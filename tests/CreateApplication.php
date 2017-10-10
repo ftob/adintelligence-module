@@ -1,18 +1,20 @@
 <?php
+namespace AdIntelligence\Client\Tests;
 
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Application;
 
-trait CreatesApplication
+trait CreateApplication
 {
     /**
      * Creates the application.
      *
-     * @return \Illuminate\Foundation\Application
+     * @return Application
      */
     public function createApplication()
     {
 
-        $app = new Illuminate\Foundation\Application(
+        $app = new Application(
             realpath(__DIR__.'/../')
         );
 

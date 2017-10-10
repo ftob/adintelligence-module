@@ -1,9 +1,12 @@
 <?php
 namespace AdIntelligence\Client\Tests\Services;
 
+use AdIntelligence\Client\Models\Contracts\TaskInterface;
 use AdIntelligence\Client\Services\ClientService;
 use AdIntelligence\Client\Repositories\Contracts\RepositoryInterface;
 use AdIntelligence\Client\Services\Contracts\RequesterInterface;
+use AdIntelligence\Client\Tests\CreateApplication;
+use AdIntelligence\Client\Repositories\EloquentRepository;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
@@ -20,7 +23,7 @@ use Illuminate\Foundation\Testing\TestCase;
  */
 class ClientServiceTest extends TestCase {
 
-    use \CreatesApplication;
+    use CreateApplication;
 
     /** @var  ClientInterface */
     protected $client;
@@ -42,6 +45,11 @@ class ClientServiceTest extends TestCase {
 
         $handler = HandlerStack::create($mock);
         $this->client = new Client(['handler' => $handler]);
+
+        $this->storage = \Mockery::mock('Illuminate\Contracts\Filesystem\Filesystem');
+        $taskMock = \Mockery::mock(TaskInterface::class);
+        $taskMock->shouldReceive('save')->andReturn(true);
+        $this->repository = new EloquentRepository($taskMock);
     }
 
 
@@ -53,9 +61,9 @@ class ClientServiceTest extends TestCase {
             $this->repository
         );
         $uri = new Uri("http://google.com");
-        $service = $service->get($uri);
+        $repository = $service->get($uri);
 
-        $this->assertInternalType(RequesterInterface::class, $service);
-        $this->assertEquals(RepositoryInterface::DONE, $service->status());
+        $this->assertInstanceOf(RepositoryInterface::class, $repository);
+        $this->assertEquals(RepositoryInterface::PENDING, $service->status());
     }
 }
