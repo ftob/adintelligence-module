@@ -3,6 +3,9 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * Class CreateTaskTable
+ */
 class CreateTaskTable extends Migration
 {
     public function up()
@@ -10,9 +13,9 @@ class CreateTaskTable extends Migration
         Schema::create('tasks', function(Blueprint $t)
         {
             $t->increments('id')->unsigned();
-            $t->text('url', 255);
-            $t->text('path', 255);
-            $t->text('status', 255);
+            $t->string('url', 512);
+            $t->string('path', 512);
+            $t->tinyInteger('status');
             $t->timestamps();
         });
     }
