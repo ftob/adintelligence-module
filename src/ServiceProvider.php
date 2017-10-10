@@ -15,6 +15,7 @@ class ServiceProvider extends LaravelServiceProvider
             __DIR__.'/Resources/config/parameter.php', 'adintelelligence'
         );
     }
+
     public function boot()
     {
         $this->publishes([

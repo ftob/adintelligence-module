@@ -13,9 +13,10 @@ class CreateTaskTable extends Migration
         Schema::create('tasks', function(Blueprint $t)
         {
             $t->increments('id')->unsigned();
-            $t->string('url', 512);
+            $t->string('url', 512)->unique();
             $t->string('path', 512);
-            $t->tinyInteger('status');
+            $t->string('message')->nullable();
+            $t->tinyInteger('status')->index();
             $t->timestamps();
         });
     }

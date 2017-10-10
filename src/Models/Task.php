@@ -1,26 +1,18 @@
 <?php
-namespace AdIntelligence\Models;
+namespace AdIntelligence\Client\Models;
 
-use AdIntelligence\Client\Repositories\Contracts\RepositoryInterface;
+use AdIntelligence\Client\Models\Contracts\TaskInterface;
+use AdIntelligence\Client\Models\Contracts\TaskTrait;
 use Illuminate\Database\Eloquent\Model;
 
-class Task extends Model
+/**
+ * Class Task
+ * @package AdIntelligence\Client\Models
+ */
+class Task extends Model implements TaskInterface
 {
+    use TaskTrait;
+
     protected $fillable = ['url', 'path', 'status'];
     protected $timestamp = true;
-
-    /**
-     * @param $value
-     */
-    public function setStatusAttribute($value)
-    {
-        if (in_array($value, [
-            RepositoryInterface::DONE,
-            RepositoryInterface::ERROR,
-            RepositoryInterface::PENDING,
-            RepositoryInterface::DOWNLOADING,
-        ])) {
-            $this->attributes['status'] = $value;
-        }
-    }
 }
