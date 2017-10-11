@@ -33,7 +33,7 @@ class ServiceProvider extends LaravelServiceProvider
 
         $this->app->bind(RequesterInterface::class, function($app) {
             return new ClientService(
-                $this->app->make(Client::class),
+                $this->app->make(ClientInterface::class),
                 \Storage::disk(config('adintelelligence.storage')),
                 $this->app->make(RepositoryInterface::class)
             );

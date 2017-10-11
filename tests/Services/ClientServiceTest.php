@@ -61,7 +61,7 @@ class ClientServiceTest extends TestCase {
     /**
      * @test
      */
-    public function it_is_status_done() {
+    public function it_status_done() {
         /** @var RequesterInterface $service */
         $service = new ClientService(
             $this->client,

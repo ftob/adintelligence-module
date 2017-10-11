@@ -36,6 +36,10 @@ class ClientService implements RequesterInterface
     /** @var  UriInterface */
     private $uri;
 
+    /** @var  string */
+    protected $fullPath;
+
+
     /**
      * ClientService constructor.
      * @param ClientInterface $client
@@ -51,31 +55,35 @@ class ClientService implements RequesterInterface
 
     public function get(UriInterface $uri): RepositoryInterface
     {
+        $this->uri = $uri;
         $promise = $this->client->requestAsync('GET', $uri, ['verify' => false, 'stream' => true]);
-
         // Pending stage
         if($promise->getState() === PromiseInterface::PENDING) {
-
             $this->onPending();
+            $this->afterOnPending();
         }
 
         $promise->then(
             // Success
             function (ResponseInterface $res) {
                 $body = $res->getBody();
+                $this->fullPath = $this->makeFullPath($this->uri, $res->getHeader('Content-Type'));
                 // Downloading
                 while (!$body->eof()) {
 
                     if($this->status === RepositoryInterface::PENDING) {
                         $this->onDownload();
+                        $this->afterOnDownload();
                     }
-                    $this->putContent($body->read(1024));
+                    $this->putContent($body->read(1024), $this->fullPath);
                 }
                 $this->onDone();
+                $this->afterOnDownload();
             },
             // Reject status
             function (RequestException $e) {
                 $this->onReject($e->getMessage());
+                $this->afterOnReject();
             }
         )->wait();
 
@@ -85,10 +93,10 @@ class ClientService implements RequesterInterface
     /**
      * @param $content
      */
-    protected function putContent($content)
+    protected function putContent($content, $fullPath)
     {
         $this->content = $content;
-        $this->storage->put('/tmp/' . sha1(md5($this->uri)), $this->content);
+        $this->storage->put($this->fullPath, $this->content);
     }
 
     /**
@@ -159,5 +167,35 @@ class ClientService implements RequesterInterface
     protected function afterOnReject()
     {
         // Event reject
+    }
+
+    private function getExtensionByContentType($contentType)
+    {
+        $map = array(
+            'application/pdf'   => '.pdf',
+            'application/zip'   => '.zip',
+            'image/gif'         => '.gif',
+            'image/jpeg'        => '.jpg',
+            'image/png'         => '.png',
+            'text/css'          => '.css',
+            'text/html'         => '.html',
+            'text/javascript'   => '.js',
+            'text/plain'        => '.txt',
+            'text/xml'          => '.xml',
+        );
+        if (isset($map[$contentType]))
+        {
+            return $map[$contentType];
+        }
+
+        $pieces = explode('/', $contentType);
+        return '.' . array_pop($pieces);
+    }
+
+    // return /storage/tmp/(hash).(ext)
+    private function makeFullPath($uri, $contentType):string
+    {
+        return config('adintelligence.storage_path') . sha1(md5($this->uri))
+            . $this->getExtensionByContentType($contentType);
     }
 }
