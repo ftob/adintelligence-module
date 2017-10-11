@@ -60,7 +60,6 @@ class ClientService implements RequesterInterface
         // Pending stage
         if($promise->getState() === PromiseInterface::PENDING) {
             $this->onPending();
-            $this->afterOnPending();
         }
         $promise->then(
             // Success
@@ -72,18 +71,14 @@ class ClientService implements RequesterInterface
 
                     if($this->status === RepositoryInterface::PENDING) {
                         $this->onDownload();
-                        $this->afterOnDownload();
                     }
-                    $this->putContent($body->read(1024), $this->fullPath);
+                    $this->putContent($body->read(65536), $this->fullPath);
                 }
                 $this->onDone();
-                $this->afterOnDownload();
             },
             // Reject status
             function (RequestException $e) {
-
                 $this->onReject($e->getMessage());
-                $this->afterOnReject();
             }
         )->wait();
 
@@ -97,7 +92,7 @@ class ClientService implements RequesterInterface
     protected function putContent($content, $fullPath)
     {
         $this->content = $content;
-        $this->storage->put($fullPath, $this->content);
+        $this->storage->append($fullPath, $this->content);
     }
 
     /**
@@ -193,7 +188,7 @@ class ClientService implements RequesterInterface
         return '.' . array_pop($pieces);
     }
 
-    // return /storage/tmp/(hash).(ext)
+    // return /storage/tmp/(hash).(ext);(charset)
     private function makeFullPath($uri, $contentType):string
     {
         $storagePath = '';
