@@ -15,7 +15,7 @@ class CreateTaskTable extends Migration
             $t->increments('id')->unsigned();
             $t->string('url', 512)->unique();
             $t->string('path', 512)->nullable();
-            $t->string('message')->nullable();
+            $t->string('message', 4096)->nullable();
             $t->tinyInteger('status')->index()->nullable();
             $t->timestamps();
         });
