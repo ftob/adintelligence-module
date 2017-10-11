@@ -31,4 +31,5 @@ trait TaskTrait
         $this->attributes['message'] = $value;
 
     }
+
 }

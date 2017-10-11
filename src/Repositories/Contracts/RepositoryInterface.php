@@ -16,4 +16,6 @@ interface RepositoryInterface
     public function changeStatus(int $status, $message = ''): bool;
 
     public function getStatus():int;
+
+    public function all();
 }
