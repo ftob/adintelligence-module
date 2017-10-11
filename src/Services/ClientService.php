@@ -62,12 +62,11 @@ class ClientService implements RequesterInterface
             $this->onPending();
             $this->afterOnPending();
         }
-
         $promise->then(
             // Success
             function (ResponseInterface $res) {
                 $body = $res->getBody();
-                $this->fullPath = $this->makeFullPath($this->uri, $res->getHeader('Content-Type'));
+                $this->fullPath = $this->makeFullPath($this->uri, array_first($res->getHeader('Content-Type')));
                 // Downloading
                 while (!$body->eof()) {
 
@@ -82,6 +81,7 @@ class ClientService implements RequesterInterface
             },
             // Reject status
             function (RequestException $e) {
+
                 $this->onReject($e->getMessage());
                 $this->afterOnReject();
             }
@@ -92,19 +92,20 @@ class ClientService implements RequesterInterface
 
     /**
      * @param $content
+     * @param $fullPath
      */
     protected function putContent($content, $fullPath)
     {
         $this->content = $content;
-        $this->storage->put($this->fullPath, $this->content);
+        $this->storage->put($fullPath, $this->content);
     }
 
     /**
      * @return int
      */
-    public function status(): int
+    public function status()
     {
-        return $this->repository->getStatus();
+        return $this->repository->getStatus($this->uri);
     }
 
     /**
@@ -114,7 +115,7 @@ class ClientService implements RequesterInterface
     {
         $this->status = RepositoryInterface::DOWNLOADING;
         $this->afterOnDownload();
-        return $this->repository->changeStatus(RepositoryInterface::DOWNLOADING);
+        return $this->repository->changeStatus($this->uri,RepositoryInterface::DOWNLOADING);
     }
 
     /**
@@ -124,7 +125,7 @@ class ClientService implements RequesterInterface
     {
         $this->status = RepositoryInterface::PENDING;
         $this->afterOnPending();
-        return $this->repository->changeStatus(RepositoryInterface::PENDING);
+        return $this->repository->changeStatus($this->uri,RepositoryInterface::PENDING);
 
     }
 
@@ -135,7 +136,7 @@ class ClientService implements RequesterInterface
     {
         $this->status = RepositoryInterface::DONE;
         $this->afterOnDone();
-        return $this->repository->changeStatus(RepositoryInterface::DONE);
+        return $this->repository->changeStatus($this->uri,RepositoryInterface::DONE);
     }
 
     /**
@@ -146,7 +147,7 @@ class ClientService implements RequesterInterface
     {
         $this->status = RepositoryInterface::ERROR;
         $this->afterOnReject();
-        return $this->repository->changeStatus(RepositoryInterface::ERROR, $message);
+        return $this->repository->changeStatus($this->uri, RepositoryInterface::ERROR, $message);
     }
 
     protected function afterOnDownload()
@@ -195,7 +196,15 @@ class ClientService implements RequesterInterface
     // return /storage/tmp/(hash).(ext)
     private function makeFullPath($uri, $contentType):string
     {
-        return config('adintelligence.storage_path') . sha1(md5($this->uri))
+        $storagePath = '';
+        if (function_exists('config')) {
+            try {
+                $storagePath = config('adintelligence.storage_path');
+            } catch (\ReflectionException $e) {
+                //
+            }
+        }
+        return $storagePath . sha1(md5($this->uri))
             . $this->getExtensionByContentType($contentType);
     }
 }
