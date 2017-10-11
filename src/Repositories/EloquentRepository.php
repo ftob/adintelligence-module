@@ -41,4 +41,22 @@ class EloquentRepository implements RepositoryInterface
     {
         return $this->model->status;
     }
+
+    /**
+     * @return mixed
+     */
+    public function all()
+    {
+        return $this->model->all();
+    }
+
+    /**
+     * @param $attribute
+     * @return bool
+     */
+    public function create($attribute)
+    {
+        return $this->model->fill($attribute)->save();
+    }
+
 }

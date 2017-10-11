@@ -36,7 +36,11 @@ class ClientServiceTest extends TestCase {
 
     public function setUp()
     {
+        $this->setMock();
+    }
 
+    public function setMock()
+    {
         $mock = new MockHandler([
             new Response(200, ['X-Foo' => 'Bar']),
             new Response(202, ['Content-Length' => 0]),
@@ -54,7 +58,10 @@ class ClientServiceTest extends TestCase {
     }
 
 
-    public function testRun() {
+    /**
+     * @test
+     */
+    public function it_is_status_done() {
         /** @var RequesterInterface $service */
         $service = new ClientService(
             $this->client,
