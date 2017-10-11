@@ -2,6 +2,7 @@
 namespace AdIntelligence\Client\Tests\Services;
 
 use AdIntelligence\Client\Models\Contracts\TaskInterface;
+use AdIntelligence\Client\Models\Task;
 use AdIntelligence\Client\Services\ClientService;
 use AdIntelligence\Client\Repositories\Contracts\RepositoryInterface;
 use AdIntelligence\Client\Services\Contracts\RequesterInterface;
@@ -37,6 +38,8 @@ class ClientServiceTest extends TestCase {
     public function setUp()
     {
         $this->setMock();
+        parent::setUp();
+
     }
 
     public function setMock()
@@ -52,16 +55,21 @@ class ClientServiceTest extends TestCase {
 
         $this->storage = \Mockery::mock('Illuminate\Contracts\Filesystem\Filesystem');
         $this->storage->shouldReceive('put')->withAnyArgs()->andReturn(true);
-        $taskMock = \Mockery::mock(TaskInterface::class);
+        $taskMock = \Mockery::mock(Task::class);
+        $taskMock->exists = true;
+        $taskMock->shouldReceive('setAttribute')->withAnyArgs()->andReturnNull();
+        $taskMock->shouldReceive('getAttribute')->withAnyArgs()->andReturn(2);
         $taskMock->shouldReceive('save')->andReturn(true);
         $this->repository = new EloquentRepository($taskMock);
     }
 
 
+
+
     /**
      * @test
      */
-    public function it_status_done() {
+    public function it_should_status_done() {
         /** @var RequesterInterface $service */
         $service = new ClientService(
             $this->client,

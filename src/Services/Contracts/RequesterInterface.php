@@ -9,5 +9,5 @@ use Psr\Http\Message\UriInterface;
 interface RequesterInterface {
     public function get(UriInterface $uri): RepositoryInterface;
 
-    public function status(): int;
+    public function status();
 }
