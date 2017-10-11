@@ -13,7 +13,7 @@ interface TaskInterface
 
     public function save(array $options = []);
 
-    public function all($columns = ['*']);
+    public static function all($columns = ['*']);
 
     public function fill(array $attributes);
 
