@@ -22,13 +22,22 @@ class ServiceProvider extends LaravelServiceProvider
             __DIR__.'/Resources/config/parameters.php', 'adintelelligence'
         );
 
-        $this->app->bind(RepositoryInterface::class, new EloquentRepository(new Task()));
-        $this->app->bind(ClientInterface::class, new Client());
-        $this->app->bind(RequesterInterface::class, new ClientService(
-            $this->app->make(ClientInterface::class),
-            Storage::disk(config('adintelelligence.storage')),
-            $this->app->make(RepositoryInterface::class)
-        ));
+        $this->app->bind(ClientInterface::class, function ($app) {
+            return new Client();
+        });
+
+        $this->app->bind(RepositoryInterface::class, function($app) {
+            return new EloquentRepository(new Task());
+        });
+
+
+        $this->app->bind(RequesterInterface::class, function($app) {
+            return new ClientService(
+                $this->app->make(Client::class),
+                \Storage::disk(config('adintelelligence.storage')),
+                $this->app->make(RepositoryInterface::class)
+            );
+        });
     }
 
     public function boot()
