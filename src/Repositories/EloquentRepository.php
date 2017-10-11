@@ -34,9 +34,13 @@ class EloquentRepository implements RepositoryInterface
     {
         if(!$this->model->exists) {
             $this->model = $this->model->whereUrl($uri)->first();
+        } else {
+            $this->model = $this->create([
+                'url' => $uri
+            ]);
         }
         $this->model->status = $status;
-        $this->model->message = trim($status);
+        $this->model->message = trim($message);
         return $this->model->save();
     }
 
