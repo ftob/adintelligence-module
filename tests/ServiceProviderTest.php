@@ -1,12 +1,9 @@
 <?php
 namespace AdIntelligence\Client\Tests;
-use AdIntelligence\Client\Repositories\Contracts\RepositoryInterface;
 use AdIntelligence\Client\ServiceProvider;
-use GuzzleHttp\Promise\Tests\Thennable;
 use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
-use Psr\Http\Message\ResponseInterface;
 
 class ServiceProviderTest extends TestCase
 {
