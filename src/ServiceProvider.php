@@ -12,14 +12,14 @@ class ServiceProvider extends LaravelServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/Resources/config/parameter.php', 'adintelelligence'
+            __DIR__.'/Resources/config/parameters.php', 'adintelelligence'
         );
     }
 
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/Resources/config/parameter.php' => config_path('adintelelligence.php'),
+            __DIR__.'/Resources/config/parameters.php' => config_path('adintelelligence.php'),
         ]);
 
         $this->publishes([
