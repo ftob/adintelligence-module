@@ -18,4 +18,6 @@ interface RepositoryInterface
     public function getStatus():int;
 
     public function all();
+
+    public function create(array $attributes);
 }
