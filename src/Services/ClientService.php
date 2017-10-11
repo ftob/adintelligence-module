@@ -34,7 +34,7 @@ class ClientService implements RequesterInterface
     protected $content;
 
     /** @var  UriInterface */
-    private $uri;
+    protected $uri;
 
     /** @var  string */
     protected $fullPath;

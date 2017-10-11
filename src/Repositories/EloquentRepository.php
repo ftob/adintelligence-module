@@ -32,7 +32,7 @@ class EloquentRepository implements RepositoryInterface
      */
     public function changeStatus(UriInterface $uri, int $status, $message = ''): bool
     {
-        if(!$this->model->exists) {
+        if($this->model->exists) {
             $this->model = $this->model->whereUrl($uri)->first();
         } else {
             $this->model = $this->create([
@@ -50,7 +50,7 @@ class EloquentRepository implements RepositoryInterface
      */
     public function getStatus(UriInterface $uri)
     {
-        if(!$this->model->exists) {
+        if($this->model->exists) {
             $this->model = $this->model->whereUrl($uri)->first();
         };
         return $this->model->status;
