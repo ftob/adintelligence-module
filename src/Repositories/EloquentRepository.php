@@ -2,7 +2,9 @@
 namespace AdIntelligence\Client\Repositories;
 
 use AdIntelligence\Client\Models\Contracts\TaskInterface;
+use AdIntelligence\Client\Models\Task;
 use AdIntelligence\Client\Repositories\Contracts\RepositoryInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Class EloquentRepository
@@ -10,35 +12,45 @@ use AdIntelligence\Client\Repositories\Contracts\RepositoryInterface;
  */
 class EloquentRepository implements RepositoryInterface
 {
-    /** @var  TaskInterface */
+    /** @var Task */
     protected $model;
 
     /**
      * EloquentRepository constructor.
-     * @param TaskInterface $model
+     * @param Task $model
      */
-    public function __construct(TaskInterface $model)
+    public function __construct(Task $model)
     {
         $this->model = $model;
     }
 
     /**
+     * @param UriInterface $uri
      * @param int $status
      * @param string $message
      * @return bool
      */
-    public function changeStatus(int $status, $message = ''): bool
+    public function changeStatus(UriInterface $uri, int $status, $message = ''): bool
     {
+        if(!$this->model->exists) {
+            $this->model = $this->model->whereUrl($uri);
+        }
         $this->model->status = $status;
         $this->model->message = trim($status);
         return $this->model->save();
     }
 
     /**
+     * @param UriInterface $uri
      * @return int
      */
-    public function getStatus():int
+    public function getStatus(UriInterface $uri):int
     {
+        if(!$this->model->exists) {
+            $this->model = $this->model->whereUrl($uri);
+        }
+
+        $this->model = $this->model->exists;
         return $this->model->status;
     }
 
@@ -59,5 +71,4 @@ class EloquentRepository implements RepositoryInterface
         $this->model->fill($attribute)->save();
         return $this->model;
     }
-
 }

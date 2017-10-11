@@ -1,6 +1,7 @@
 <?php
-
 namespace AdIntelligence\Client\Repositories\Contracts;
+
+use Psr\Http\Message\UriInterface;
 
 /**
  * Interface RepositoryInterface
@@ -13,9 +14,9 @@ interface RepositoryInterface
     const DOWNLOADING = 1;
     const DONE = 2;
 
-    public function changeStatus(int $status, $message = ''): bool;
+    public function changeStatus(UriInterface $uri, int $status, $message = ''): bool;
 
-    public function getStatus():int;
+    public function getStatus(UriInterface $uri):int;
 
     public function all();
 

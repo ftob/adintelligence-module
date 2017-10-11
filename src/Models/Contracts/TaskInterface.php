@@ -11,10 +11,4 @@ interface TaskInterface
 
     public function setMessageAttribute($message);
 
-    public function save(array $options = []);
-
-    public static function all($columns = ['*']);
-
-    public function fill(array $attributes);
-
 }
