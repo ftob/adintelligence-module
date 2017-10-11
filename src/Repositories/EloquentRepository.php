@@ -52,11 +52,12 @@ class EloquentRepository implements RepositoryInterface
 
     /**
      * @param $attribute
-     * @return bool
+     * @return TaskInterface
      */
     public function create(array $attribute)
     {
-        return $this->model->fill($attribute)->save();
+        $this->model->fill($attribute)->save();
+        return $this->model;
     }
 
 }
