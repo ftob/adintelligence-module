@@ -92,11 +92,12 @@ class ClientService implements RequesterInterface
 
     /**
      * @param $content
+     * @param $fullPath
      */
     protected function putContent($content, $fullPath)
     {
         $this->content = $content;
-        $this->storage->put($this->fullPath, $this->content);
+        $this->storage->put($fullPath, $this->content);
     }
 
     /**
