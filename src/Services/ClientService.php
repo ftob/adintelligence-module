@@ -55,6 +55,7 @@ class ClientService implements RequesterInterface
 
         // Pending stage
         if($promise->getState() === PromiseInterface::PENDING) {
+
             $this->onPending();
         }
 
@@ -74,9 +75,9 @@ class ClientService implements RequesterInterface
             },
             // Reject status
             function (RequestException $e) {
-                $this->onReject();
+                $this->onReject($e->getMessage());
             }
-        );
+        )->wait();
 
         return $this->repository;
     }
@@ -87,7 +88,7 @@ class ClientService implements RequesterInterface
     protected function putContent($content)
     {
         $this->content = $content;
-        $this->storage->put(sha1(md5($this->uri)), $this->content);
+        $this->storage->put('/tmp/' . sha1(md5($this->uri)), $this->content);
     }
 
     /**
