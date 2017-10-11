@@ -3,7 +3,7 @@
         "php": ">=7.0",
         "guzzlehttp/guzzle": "^6.3"
     },
-    "name": "ftob/adintelligence-client",
+    "name": "ftob/adintelligence-module",
     "description": "AdIntelligence client",
     "keywords": [
         "modules",
