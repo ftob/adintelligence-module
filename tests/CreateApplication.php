@@ -18,7 +18,7 @@ trait CreateApplication
             realpath(__DIR__.'/../')
         );
 
-        $app->make(Kernel::class)->bootstrap();
+        //$app->make(Kernel::class)->bootstrap();
         return $app;
     }
 }
