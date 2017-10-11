@@ -16,7 +16,7 @@ interface RepositoryInterface
 
     public function changeStatus(UriInterface $uri, int $status, $message = ''): bool;
 
-    public function getStatus(UriInterface $uri):int;
+    public function getStatus(UriInterface $uri);
 
     public function all();
 

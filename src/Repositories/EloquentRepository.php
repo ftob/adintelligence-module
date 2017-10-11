@@ -44,13 +44,11 @@ class EloquentRepository implements RepositoryInterface
      * @param UriInterface $uri
      * @return int
      */
-    public function getStatus(UriInterface $uri):int
+    public function getStatus(UriInterface $uri)
     {
         if(!$this->model->exists) {
             $this->model = $this->model->whereUrl($uri);
-        }
-
-        $this->model = $this->model->exists;
+        };
         return $this->model->status;
     }
 
